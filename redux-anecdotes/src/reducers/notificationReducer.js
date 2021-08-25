@@ -1,20 +1,17 @@
-export const addNotification = (content) => ({
-  type: 'ADDNOTI',
-  content,
-});
-export const voteNotification = (content) => ({
-  type: 'VOTENOTI',
-  content,
-});
-export const endNotification = () => ({ type: 'ENDNOTI' });
+export const setNotification = (content, time) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTI',
+      content,
+    });
+    setTimeout(() => dispatch({ type: 'ENDNOTI' }), time * 1000);
+  };
+};
 
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
-    case 'ADDNOTI': {
-      return "you added '" + action.content + "'";
-    }
-    case 'VOTENOTI': {
-      return "you voted '" + action.content + "'";
+    case 'SET_NOTI': {
+      return action.content;
     }
     case 'ENDNOTI': {
       return '';

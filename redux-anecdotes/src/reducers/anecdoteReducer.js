@@ -7,7 +7,12 @@
 //   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 // ];
 
-import { createNew, getAll } from '../services/anecdotes';
+import {
+  createNew,
+  getAll,
+  getById,
+  update,
+} from '../services/anecdotes';
 
 // const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -21,9 +26,17 @@ import { createNew, getAll } from '../services/anecdotes';
 // const initialState = anecdotesAtStart.map(asObject);
 
 export const addVote = (id) => {
-  return {
-    type: 'VOTE',
-    payload: { id },
+  return async (dispatch) => {
+    const anecdote = await getById(id);
+    const newAnecdote = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+    await update(id, newAnecdote);
+    dispatch({
+      type: 'VOTE',
+      id,
+    });
   };
 };
 
@@ -53,7 +66,7 @@ const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
     case 'VOTE': {
       return state.map((anecdote) => {
-        if (anecdote.id === action.payload.id) {
+        if (anecdote.id === action.id) {
           return { ...anecdote, votes: anecdote.votes + 1 };
         }
         return anecdote;
