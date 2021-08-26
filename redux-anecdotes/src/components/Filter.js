@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { setFilter } from '../reducers/filterReducer';
 
-export default function Filter() {
-  const dispatch = useDispatch();
+export function Filter(props) {
   const style = {
     marginBottom: 10,
   };
@@ -13,9 +12,15 @@ export default function Filter() {
       <input
         type="text"
         onChange={({ target }) => {
-          dispatch(setFilter(target.value));
+          props.setFilter(target.value);
         }}
       />
     </div>
   );
 }
+
+const mapDispatchToProps = {
+  setFilter,
+};
+
+export default connect(null, mapDispatchToProps)(Filter);
